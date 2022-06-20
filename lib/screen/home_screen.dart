@@ -25,11 +25,33 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: renderAppBar(),
-      body: Column(
-        children: [
-          _CustomGoogleMap(initialCameraPosition: initialCameraPosition),
-          _ChoolCheckButton(),
-        ],
+      body: FutureBuilder(
+        // Future만! return해주는 모든 함수를 넣어줄 수 있다.
+        future: checkPermission(),
+        // return값을 snapshot에서 바라본다.
+        // future에 할당된 함수의 return 상태가 변경될 때 마다, builder함수가 호출된다.
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          print(snapshot.connectionState);
+          print(snapshot.data);
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (snapshot.data == '위치 권한이 허가되었습니다.') {
+            return Column(
+              children: [
+                _CustomGoogleMap(initialCameraPosition: initialCameraPosition),
+                _ChoolCheckButton(),
+              ],
+            );
+          } else {
+            return Center(
+              child: Text(snapshot.data),
+            );
+          }
+        },
       ),
     );
   }
