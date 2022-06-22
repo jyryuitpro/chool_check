@@ -23,13 +23,36 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static final double distance = 100;
 
-  static final Circle circle = Circle(
+  static final Circle withinDistanceCircle = Circle(
     circleId: CircleId('circle'),
     center: companyLatLng,
     fillColor: Colors.blue.withOpacity(0.5),
     radius: distance,
     strokeColor: Colors.blue,
     strokeWidth: 1,
+  );
+
+  static final Circle notWithinDistanceCircle = Circle(
+    circleId: CircleId('notWithinDistanceCircle'),
+    center: companyLatLng,
+    fillColor: Colors.red.withOpacity(0.5),
+    radius: distance,
+    strokeColor: Colors.red,
+    strokeWidth: 1,
+  );
+
+  static final Circle checkDoneCircle = Circle(
+    circleId: CircleId('checkDoneCircle'),
+    center: companyLatLng,
+    fillColor: Colors.green.withOpacity(0.5),
+    radius: distance,
+    strokeColor: Colors.green,
+    strokeWidth: 1,
+  );
+
+  static final Marker marker = Marker(
+    markerId: MarkerId('marker'),
+    position: companyLatLng,
   );
 
   @override
@@ -55,7 +78,8 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 _CustomGoogleMap(
                   initialCameraPosition: initialCameraPosition,
-                  circle: circle,
+                  circle: withinDistanceCircle,
+                  marker: marker,
                 ),
                 _ChoolCheckButton(),
               ],
@@ -113,10 +137,12 @@ class _HomeScreenState extends State<HomeScreen> {
 class _CustomGoogleMap extends StatelessWidget {
   final CameraPosition initialCameraPosition;
   final Circle circle;
+  final Marker marker;
 
   const _CustomGoogleMap({
     required this.initialCameraPosition,
     required this.circle,
+    required this.marker,
     Key? key,
   }) : super(key: key);
 
@@ -130,6 +156,7 @@ class _CustomGoogleMap extends StatelessWidget {
         myLocationEnabled: true,
         myLocationButtonEnabled: false,
         circles: Set.from([circle]),
+        markers: Set.from([marker]),
       ),
     );
   }
